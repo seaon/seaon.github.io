@@ -107,8 +107,9 @@ class Blog
             $html = $this->render($result);
             $this->writeFile(BLOGPATH.$result[0]['name'].'.html', $html);
             $year = substr($result[0]['date'], 0, 4);
-            $this->noteIndex[$year] = [
-                'mouth' => substr($result[0]['date'], -5),
+            $mouth = substr($result[0]['date'], -5);
+            $this->noteIndex[$year][$mouth] = [
+                'mouth' => $mouth,
                 'url' => '/blog/'.$result[0]['name'].'.html',
                 'title' => $result[0]['title'],
             ];

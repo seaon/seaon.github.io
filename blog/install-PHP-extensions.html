@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+    <!-- Disable transformation -->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!-- Website description -->
+    <meta name="description" content="blog seaon php linux" />
+    <!-- Website keywords -->
+    <meta name="keywords" content="{$page.keywords}" />
+    <!-- Website favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/public/favicon.ico" />
+    <!-- styling -->
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css" />
+    <script src="/public/js/theme.js"></script>
+    <title>{$title}</title>
+</head>
+
+<body>
+<div id="page">
+    <header id="masthead">
+        <div class="site-header-inner">
+            <h1 class="site-title">
+                <a href="/" class="logo">Seaon</a>
+            </h1>
+
+            <nav id="nav-top">
+                <ul id="menu-top" class="nav-top-items">
+                    <li class="menu-item">
+                        <a href="https://about.me/gu.haihong" target="_blank">
+                            About
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+        <div id="content">
+            <h1>PHP安装扩展</h1>
+<p>最近在腾讯云上买了一个1G1M的VPS，在上面各种折腾，顺手安装了PHP、Nginx。在学习Socket的时候，报错说未安装扩展，然后查询资料成功加载了扩展。</p>
+<h2>安装步骤</h2>
+<ul>
+<li>切到源码目录下<code>ext</code>文件夹下，找到要安装的扩展，如sockets，执行以下命令</li>
+</ul>
+<pre><code class="language-sh">cd sockets/
+phpize
+./configure --with-php-config=/usr/local/php/bin/php-config
+make &amp;&amp; make install</code></pre>
+<ul>
+<li>
+<p>生成so文件后，在配置文件中添加</p>
+<pre><code>extension=/usr/local/php/lib/php/extensions/no-debug-non-zts-20160303/sockets.so</code></pre>
+</li>
+<li>执行 php -m 查看是否加载成功</li>
+</ul>
+<p>PHP部分安装参数</p>
+<pre><code class="language-sh">./configure 
+--prefix=/usr/local/php 
+--enable-fpm 
+--enable-mbstring 
+--with-curl 
+--enable-sockets 
+--with-openssl 
+--with-libxml-dir 
+--with-mcrypt
+--with-mysql=mysqlnd 
+--with-mysqli=mysqlnd 
+--with-pdo-mysql=mysqlnd 
+--enable-pcntl 
+--enable-maintainer-zts // 线程安全
+--with-zlib 
+--with-mhash 
+--enable-inline-optimization // 线程优化</code></pre>
+        </div>
+
+<footer id="colophon">
+            <span class="copyright-year">
+                &copy;  -
+                <span class="footer-author">Seaon.</span>
+                <span class="power-by">
+                    Powered by
+                    <a class="hexo-link" href="https://github.com/seaon/blog">blog</a>
+                </span>
+            </span>
+</footer>
+
+<div class="back-to-top" id="back-to-top">
+    <i class="iconfont icon-up"></i>
+</div>
+</div>
+</body>
+
+</html>
