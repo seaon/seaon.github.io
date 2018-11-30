@@ -20,11 +20,7 @@ class Blog
 
     public function __construct(Parsedown $Parsedown)
     {
-        $this->clear();
         $this->Parsedown = $Parsedown;
-        $this->getAllNote();
-        $this->header = $this->readFile(TPLPATH.'header.html');
-        $this->footer = $this->readFile(TPLPATH.'footer.html');
     }
 
     public function getAllNote()
@@ -35,6 +31,14 @@ class Blog
     public function readFile($file)
     {
         return file_get_contents($file);
+    }
+
+    public function writeFile($fileName, $content)
+    {
+        $this->header = $this->readFile(TPLPATH.'header.html');
+        $this->footer = $this->readFile(TPLPATH.'footer.html');
+        $str = $this->header.$content.$this->footer;
+        file_put_contents($fileName, $str);
     }
 
     public function parse($file)
@@ -56,16 +60,10 @@ class Blog
         $page = [];
         foreach ($heads as $key => $value) {
             list($k, $v) = preg_split('/:[ ]{0,}/', $value);
-            $page[$k] = $v;
+            $page[$k] = str_replace(array("\r\n", "\r", "\n"), '', $v);
         }
 
         return $page;
-    }
-
-    public function writeFile($fileName, $content)
-    {
-        $str = $this->header.$content.$this->footer;
-        file_put_contents($fileName, $str);
     }
 
     public function render($content)
@@ -96,6 +94,10 @@ class Blog
 
     public function generator()
     {
+        // 清理目录
+        $this->clear();
+        $this->getAllNote();
+
         if (empty($this->noteList)) {
             echo 'empty note';
             return 1;

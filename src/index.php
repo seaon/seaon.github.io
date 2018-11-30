@@ -14,8 +14,6 @@ define('NOTEPATH', ROOTPATH.'/source/');
 define('BLOGPATH', ROOTPATH.'/blog/');
 define('TPLPATH', ROOTPATH.'/template/');
 
-$Parsedown = new Parsedown();
-
-$blog = new Blog($Parsedown);
+$blog = new Blog(new Parsedown());
 
 $blog->generator();

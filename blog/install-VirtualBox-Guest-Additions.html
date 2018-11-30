@@ -11,73 +11,69 @@
     <!-- Website description -->
     <meta name="description" content="blog seaon php linux" />
     <!-- Website keywords -->
-    <meta name="keywords" content="{$page.keywords}" />
+    <meta name="keywords" content="{$keywords}" />
     <!-- Website favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/public/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
     <!-- styling -->
-    <link rel="stylesheet" type="text/css" href="/public/css/style.css" />
-    <script src="/public/js/theme.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.min.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/prism.min.css" />
     <title>{$title}</title>
 </head>
 
 <body>
-<div id="page">
-    <header id="masthead">
-        <div class="site-header-inner">
-            <h1 class="site-title">
-                <a href="/" class="logo">Seaon</a>
-            </h1>
+    <div id="page">
+        <header id="masthead">
+            <div class="site-header-inner">
+                <h1 class="site-title">
+                    <a href="/" class="logo">Seaon</a>
+                </h1>
+                <nav id="nav-top">
+                    <ul id="menu-top" class="nav-top-items">
+                        <li class="menu-item">
+                            <a href="https://about.me/gu.haihong" target="_blank">About</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
 
-            <nav id="nav-top">
-                <ul id="menu-top" class="nav-top-items">
-                    <li class="menu-item">
-                        <a href="https://about.me/gu.haihong" target="_blank">
-                            About
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-        <div id="content">
+        <div id="content" class="output">
             <h1>VirtualBox设置共享文件夹</h1>
 <h2>准备工作</h2>
-<pre><code>```
-yum update
+<pre><code class="language-sh">yum update
 yum install -y gcc
 yum install -y kernel-devel 
 yum -y install bzip2 bzip2-devel # 运行增强工具时需要
 
-reboot # 重启使安装生效。
-```</code></pre>
+reboot # 重启使安装生效。</code></pre>
 <h2>配置共享文件夹</h2>
-<pre><code>在虚拟机的设置界面中添加要共享的文件夹。
-需要注意的是自动挂载和固定分配最好都点上，不然每次虚拟机关机后都要手动再mount，而只读分配最好不要选择，不然在虚拟机中无法写入。</code></pre>
+<p>在虚拟机的设置界面中添加要共享的文件夹。
+需要注意的是自动挂载和固定分配最好都点上，不然每次虚拟机关机后都要手动再mount，而只读分配最好不要选择，不然在虚拟机中无法写入。</p>
 <h2>挂载光盘</h2>
-<pre><code>在virtualbox虚拟机窗口的菜单条下选择 "设备"--"安装增强功能"，相当于在 CentOS 虚拟机中插入了 GuestAddition 的光盘。
-
-mount -t auto /dev/cdrom /mnt
+<p>在virtualbox虚拟机窗口的菜单条下选择 &quot;设备&quot;--&quot;安装增强功能&quot;，相当于在 CentOS 虚拟机中插入了 GuestAddition 的光盘。</p>
+<pre><code class="language-sh">mount -t auto /dev/cdrom /mnt
 cd /mnt
 ./VBoxLinuxAdditions.run
 安装 GuestAddition。</code></pre>
 <p>再次重启，在/media目录下你会发现一个文件夹，这就是你的共享文件夹，文件夹名称为<code>sf_</code>加上你在设置共享文件夹时填写的共享文件夹名称。</p>
         </div>
 
-<footer id="colophon">
+        <footer id="colophon">
             <span class="copyright-year">
-                &copy;  -
+                &copy; 2016 - <span class="currentYear">123</span>
                 <span class="footer-author">Seaon.</span>
                 <span class="power-by">
                     Powered by
-                    <a class="hexo-link" href="https://github.com/seaon/blog">blog</a>
+                    <a href="https://github.com/seaon/seaon.github.io">blog</a>
                 </span>
             </span>
-</footer>
+        </footer>
 
-<div class="back-to-top" id="back-to-top">
-    <i class="iconfont icon-up"></i>
-</div>
-</div>
+        <div class="back-to-top" id="back-to-top">
+            <i class="iconfont icon-up"></i>
+        </div>
+    </div>
+    <script src="/assets/js/init.js" type="text/javascript"></script>
 </body>
 
 </html>
