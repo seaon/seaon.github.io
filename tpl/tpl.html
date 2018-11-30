@@ -10,13 +10,11 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <!-- Website description -->
     <meta name="description" content="blog seaon php linux" />
-    <!-- Website keywords -->
-    <meta name="keywords" content="{$keywords}" />
     <!-- Website favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
     <!-- styling -->
     <link rel="stylesheet" type="text/css" href="/assets/css/css.min.css" />
-    <title>{$title}</title>
+    <title><?php echo $title;?></title>
 </head>
 
 <body>
@@ -37,7 +35,7 @@
         </header>
 
         <div id="content" class="output">
-            {$content}
+            <?php echo $content;?>
         </div>
 
         <footer id="colophon">

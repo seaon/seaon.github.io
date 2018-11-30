@@ -10,86 +10,129 @@ class Blog
 {
     const version = '0.0.1';
 
-    private $Parsedown = null;
+    private $mdParse = null;
 
     private $noteList = [];
     private $noteIndex = [];
 
-    private $header = '';
-    private $footer = '';
+    protected $basePath;
+    protected $tplPath;
+    protected $distPath;
+    protected $sourcePath;
 
-    public function __construct(Parsedown $Parsedown)
+    public $comment = '[^_^]:';
+
+    public function __construct($mdParse)
     {
-        $this->Parsedown = $Parsedown;
+        $this->mdParse = $mdParse;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->$name = $value;
     }
 
     public function getAllNote()
     {
-        $this->noteList = array_slice(scandir(NOTEPATH), 2);
+        $this->noteList = glob($this->sourcePath . '*.md');
     }
 
-    public function readFile($file)
+    public function readFileAll($file)
     {
         return file_get_contents($file);
     }
 
-    public function writeFile($fileName, $content)
+    public function readFileHead($file)
     {
-        $this->header = $this->readFile(TPLPATH.'header.html');
-        $this->footer = $this->readFile(TPLPATH.'footer.html');
-        $str = $this->header.$content.$this->footer;
-        file_put_contents($fileName, $str);
-    }
-
-    public function parse($file)
-    {
-        $cxt = $this->readFile($file);
-        preg_match('/---([\s\S]*?)---/i', $cxt, $matches);
-
-        $text = str_replace($matches[0], '', $cxt);
-        $content = $this->Parsedown->text($text);
-        $heads = $this->getHeads($matches[1]);
-
-        return [$heads, $content];
-    }
-
-    public function getHeads($head)
-    {
-        $heads = explode("\n", $head);
-        $heads = array_slice($heads, 1, -1);
-        $page = [];
-        foreach ($heads as $key => $value) {
-            list($k, $v) = preg_split('/:[ ]{0,}/', $value);
-            $page[$k] = str_replace(array("\r\n", "\r", "\n"), '', $v);
+        $line = [];
+        try {
+            $fh = fopen($file, "r");
+            while (!feof($fh)) {
+                $head = fgets($fh);
+                if (strpos($head, $this->comment) !== 0) {
+                    break;
+                }
+                $line[] = $head;
+            }
+            fclose($fh);
+        } catch (Exception $e) {
+            return $file."读取失败";
         }
 
-        return $page;
+        return $line;
     }
 
-    public function render($content)
+    public function writeFile($fileName, $content)
     {
-        $tpl = $this->readFile(TPLPATH.'tpl.html');
-        return str_replace('{$content}', $content[1], $tpl);
+        file_put_contents($fileName, $content);
+    }
+
+    public function parse($content)
+    {
+        return $this->mdParse->text($content);
+    }
+
+    public function splitHeads(array $head = [])
+    {
+        $heads = [];
+        foreach ($head as $value){
+            $param = explode($this->comment, $value);
+            $param = explode('=', $param[1]);
+            $key = trim($param[0]);
+            $heads[$key] = trim($param[1]);
+        }
+        return $heads;
+    }
+
+    public function render($head, $content)
+    {
+        extract($head);
+        ob_start();
+        ob_implicit_flush(0);
+        include $this->tplPath . 'tpl.html';
+        $cxt = ob_get_contents();
+        ob_end_clean();
+        return $cxt;
     }
 
     public function IndexPage()
     {
         ob_start();
         ob_implicit_flush(0);
-            include TPLPATH . 'index.php';
-            $cxt = ob_get_contents();
+        include $this->tplPath . 'index.html';
+        $cxt = ob_get_contents();
         ob_end_clean();
 
-        $this->writeFile(ROOTPATH.'/index.html', $cxt);
+        $head['title'] = 'blog';
+
+        $content = $this->render($head, $cxt);
+
+        $this->writeFile($this->basePath.'index.html', $content);
+    }
+
+    public function about()
+    {
+        ob_start();
+        ob_implicit_flush(0);
+        include $this->tplPath . 'about.html';
+        $cxt = ob_get_contents();
+        ob_end_clean();
+
+        $head['title'] = 'blog';
+
+        $content = $this->render($head, $cxt);
+
+        $this->writeFile($this->basePath.'about.html', $content);
     }
 
     public function clear()
     {
-        $noteList = glob(BLOGPATH.'*.html');
-        foreach ($noteList as $key => $note) {
+        $noteList = glob($this->distPath . '*.html');
+        foreach ($noteList as $note) {
             unlink($note);
         }
-        unlink(ROOTPATH.'/index.html');
+        unlink($this->basePath . 'index.html');
+        unlink($this->basePath . 'about.html');
     }
 
     public function generator()
@@ -98,26 +141,27 @@ class Blog
         $this->clear();
         $this->getAllNote();
 
-        if (empty($this->noteList)) {
-            echo 'empty note';
-            return 1;
-        }
-
-        foreach ($this->noteList as $key => $note) {
-            $file = NOTEPATH . $note;
-            $result = $this->parse($file);
-            $html = $this->render($result);
-            $this->writeFile(BLOGPATH.$result[0]['name'].'.html', $html);
-            $year = substr($result[0]['date'], 0, 4);
-            $mouth = substr($result[0]['date'], -5);
+        foreach ($this->noteList as $note) {
+            // read file
+            $content = $this->readFileAll($note);
+            $head = $this->readFileHead($note);
+            // parse
+            $result = $this->parse($content);
+            $heads = $this->splitHeads($head);
+            // output
+            $html = $this->render($heads, $result);
+            $this->writeFile($this->distPath . $heads['name'].'.html', $html);
+            $year = substr($heads['date'], 0, 4);
+            $mouth = substr($heads['date'], -5);
             $this->noteIndex[$year][$mouth] = [
                 'mouth' => $mouth,
-                'url' => '/blog/'.$result[0]['name'].'.html',
-                'title' => $result[0]['title'],
+                'url' => '/dist/'.$heads['name'].'.html',
+                'title' => $heads['title'],
             ];
         }
 
         // generate index page
         $this->IndexPage();
+        $this->about();
     }
 }

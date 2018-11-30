@@ -1,8 +1,6 @@
----
-name: install-nginx
-title: nginx的安装
-date: 2016-10-29
----
+[^_^]: name=install-nginx
+[^_^]: title=nginx的安装
+[^_^]: date=2016-10-29
 ### 在一个最小化安装的CentOS上安装nginx服务器所遇到的问题：
 
 1. 获取IP地址，发现 `ifconfig` 命令不存在，需要安装`net-tools`，执行`yum -y install net-tools`，便可安装成功。

@@ -1,8 +1,7 @@
----
-name: install-VirtualBox-Guest-Additions
-title: VirtualBox安装增强工具
-date: 2017-10-19
----
+[^_^]: name=install-VirtualBox-Guest-Additions
+[^_^]: title=VirtualBox安装增强工具
+[^_^]: date=2017-10-19
+
 # VirtualBox设置共享文件夹
 
 ## 准备工作

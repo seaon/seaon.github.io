@@ -1,16 +1,15 @@
 CSSPATH = assets/css
 JSPATH = assets/js
 
-.PHONY: clean css.min.css js.min.js
+all: clean js css
 
-.PHONY: css.min.css
-css.min.css: $(CSSPATH)/*.css
-	cat $^ | sed "s@/\*.*\*/@@g" | sed '/\/\*/,/\*\//d' | sed ':a;N;s/\n//;ba;' > $(CSSPATH)/$@
+css: $(CSSPATH)/*.css
+	cat $^ | sed "s@/\*.*\*/@@g" | sed '/\/\*/,/\*\//d' | sed ':a;N;s/\n//;ba;' > $(CSSPATH)/"css.min.css"
 
-.PHONY: js.min.js
-js.min.js: $(JSPATH)/*.css
-	cat $^ | sed "s@/\*.*\*/@@g" | sed '/\/\*/,/\*\//d' | sed ':a;N;s/\n//;ba;' > $(JSPATH)/$@
+js: $(JSPATH)/*.js
+	cat $^ | sed "s@/\*.*\*/@@g" | sed '/\/\*/,/\*\//d' | sed ':a;N;s/\n//;ba;' > $(JSPATH)/"js.min.js"
 
-.PHONY: clean
 clean:
 	rm -rf $(CSSPATH)/*.min.css $(JSPATH)/*.min.js
+
+.PHONY: clean js css

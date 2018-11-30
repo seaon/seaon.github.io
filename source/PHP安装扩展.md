@@ -1,8 +1,6 @@
----
-name: install-PHP-extensions
-title: PHP安装扩展
-date: 2017-06-27
----
+[^_^]: name=install-PHP-extensions
+[^_^]: title=PHP安装扩展
+[^_^]: date=2017-06-27
 # PHP安装扩展
   最近在腾讯云上买了一个1G1M的VPS，在上面各种折腾，顺手安装了PHP、Nginx。在学习Socket的时候，报错说未安装扩展，然后查询资料成功加载了扩展。
 
