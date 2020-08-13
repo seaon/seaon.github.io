@@ -507,6 +507,11 @@ h6 {
     max-width: 1000px;
 }
 
+#content a {
+    color: #0e83cd;
+    text-decoration: none;
+}
+
 #primary.home {
     width: 73%;
     float: left;
